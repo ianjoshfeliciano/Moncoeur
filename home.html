@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Iya!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Page -->
+        <div id="home-page" class="page active">
+            <h1>Hi Iya Mon Coeur! 🎀🎀🎀</h1>
+            <button onclick="animateTransition('question-miss')">Start</button>
+        </div>
+
+        <!-- New Question: "Miss mo na ba ako?" -->
+        <div id="question-miss" class="page">
+            <h2>Miss mo na ba ako?</h2>
+            <button onclick="answerMiss('Yes! 💖')">Yes! 💖</button>
+            <button onclick="answerMiss('Yes! 💕')">No 😞</button>
+        </div>
+
+        <!-- First Question: "May I court you?" -->
+        <div id="question1" class="page">
+            <h2>May I court you?</h2>
+            <button onclick="answerCourt('Yes! 😘')">Yes! 😘</button>
+            <button onclick="answerCourt('Yes! 💖')">Yes! 💖</button>
+        </div>
+
+        <!-- Second Question: "How would you like our next date?" -->
+        <div id="question2" class="page">
+            <h2>How would you like our next date?</h2>
+            <button onclick="chooseDate('Ride and grab some coffee 🏍️☕')">Ride and grab some coffee 🏍️☕</button>
+            <button onclick="chooseDate('Watch movies in theaters 📽️👩‍❤️‍💋‍👨')">Watch movies in theaters 📽️👩‍❤️‍💋‍👨</button>
+        </div>
+
+        <!-- Summary Page -->
+        <div id="summary-page" class="page">
+            <h2>Thank you! See you on our next date! 💗</h2>
+            <p id="summary-text"></p>
+        </div>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="background-music" autoplay loop>
+        <source src="palagi.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        let selectedDate = '';
+        let courtAnswer = '';
+        let missAnswer = '';
+
+        function goToPage(pageId) {
+            document.querySelector('.page.active').classList.remove('active');
+            document.getElementById(pageId).classList.add('active');
+        }
+
+        function animateTransition(nextPageId) {
+            const activePage = document.querySelector('.page.active');
+            activePage.classList.add('fade-out');
+            setTimeout(() => goToPage(nextPageId), 500);
+        }
+
+        function answerMiss(answer) {
+            missAnswer = answer;
+            animateTransition('question1');
+        }
+
+        function answerCourt(answer) {
+            courtAnswer = answer;
+            animateTransition('question2');
+        }
+
+        function chooseDate(choice) {
+            selectedDate = choice;
+            displaySummary();
+            animateTransition('summary-page');
+        }
+
+        function displaySummary() {
+            const summaryText = `
+                You answered: "Miss mo na ba ako?" - "${missAnswer}"
+                You answered: "May I court you?" - "${courtAnswer}"
+                You chose: ${selectedDate}
+            `;
+            document.getElementById('summary-text').innerText = summaryText;
+        }
+
+        // Auto-play music on page load for browsers that allow it
+        window.addEventListener('load', () => {
+            const music = document.getElementById('background-music');
+            
+            // Attempt to autoplay the audio immediately
+            music.play().catch(() => {
+                // If autoplay is blocked, wait for the first user interaction to start the music
+                const interactionHandler = () => {
+                    music.play();
+                    document.body.removeEventListener('click', interactionHandler);
+                    document.body.removeEventListener('touchstart', interactionHandler);
+                };
+                document.body.addEventListener('click', interactionHandler);
+                document.body.addEventListener('touchstart', interactionHandler);
+            });
+        });
+    </script>
+</body>
+</html>
